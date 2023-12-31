@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-image: url('Uefa-champions-league-2023-istanbul.webp');
+            background-size: cover;
+            background-position: top;
+            background-repeat: repeat;
+            color: white; /* Set text color to be readable on the background */
+            padding: 20px; /* Add some padding for better readability */
+            font-family: 'Arial', sans-serif; /* Set a font family for better cross-browser compatibility */
+        }
+
+        h1 {
+            text-align: left;
+            color: white; /* Set text color for the header */
+        }
+
+        label, select {
+            color: rgb(0, 0, 0); /* Set text color for the label and select */
+        }
+
+        .movies {
+            color: white; /* Set text color for the movies container */
+        }
+
+        /* Add more styles as needed */
+    </style>
+</head>
+<body>
+    <h1>Choisissez votre groupe de ldc</h1>
+
+    <!-- Add a select element for team selection -->
+    <label for="teamSelector"></label>
+    <select id="teamSelector">
+        <option value="A" selected>A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+        <option value="F">F</option>
+        <option value="G">G</option>
+        <option value="H">H</option>
+        <!-- Add more options as needed -->
+    </select>
+
+    <div class="movies"></div>
+    
+    <script>
+        // JavaScript code for fetching data and updating the movies container
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': 'cd7add1ebamsh26db17b9053c289p1034a4jsndc1668b89d98',
+                'X-RapidAPI-Host': 'heisenbug-champions-league-live-scores-v1.p.rapidapi.com'
+            }
+        };
+
+        // Select the team selector element
+        const teamSelector = document.getElementById('teamSelector');
+
+        // Add an event listener to fetch data when the team selection changes
+        teamSelector.addEventListener('change', () => {
+            // Get the selected team number from the dropdown
+            const selectedTeam = teamSelector.value;
+
+            // Use the selected team number to update the URL
+            const url = `https://heisenbug-champions-league-live-scores-v1.p.rapidapi.com/api/championsleague/table?group=${selectedTeam}`;
+
+            // Fetch data for the selected team
+            fetch(url, options)
+                .then(response => response.json())
+                .then(response => {
+                    const movies = response.records;
+                    const moviesContainer = document.querySelector('.movies');
+
+                    // Clear existing content in the movies container
+                    moviesContainer.innerHTML = '';
+
+                    movies.forEach(movie => {
+                        const name = movie.team;
+                        const points = movie.points;
+
+                        const movieParagraph = document.createElement('p');
+                        movieParagraph.textContent = name + " " + points;
+
+                        // Append the paragraph to the movies container
+                        moviesContainer.appendChild(movieParagraph);
+                    });
+                })
+                .catch(err => console.error(err));
+        });
+    </script>
+</body>
+</html>
